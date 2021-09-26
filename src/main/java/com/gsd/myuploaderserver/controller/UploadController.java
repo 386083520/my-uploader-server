@@ -19,7 +19,7 @@ public class UploadController {
 
     @PostMapping(value = "/uploadFile")
     public ResponseEntity<String> upload(MultipartFileParams file) {
-        log.info("file", "MultipartFileParams");
+        log.info("file");
         return fileUploadService.uploadFile(file);
     }
 }
