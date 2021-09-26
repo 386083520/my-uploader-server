@@ -1,5 +1,6 @@
 package com.gsd.myuploaderserver.service.impl;
 
+import com.gsd.myuploaderserver.models.FileInfo;
 import com.gsd.myuploaderserver.models.MultipartFileParams;
 import com.gsd.myuploaderserver.service.FileUploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,10 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public ResponseEntity<String> uploadFile(MultipartFileParams fileParams) {
-        String fileName = fileParams.getFilename();
-        log.info("fileName---" + fileName);
-        String fileDir = fileName.split("\\.")[0];
+        String identifier = fileParams.getIdentifier();
+        log.info("identifier---" + identifier);
         int chunkNumber = fileParams.getChunkNumber();
-        File fileTemp = new File(uploadFilePath + "/" + fileDir + "/" + chunkNumber);
+        File fileTemp = new File(uploadFilePath + "/" + identifier + "/" + chunkNumber);
 
         File fileParent = fileTemp.getParentFile();
         if(!fileParent.exists()) {
@@ -34,6 +34,13 @@ public class FileUploadServiceImpl implements FileUploadService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return ResponseEntity.ok("SUCCESS");
+    }
+
+    @Override
+    public ResponseEntity<String> mergeFile(FileInfo fileInfo) {
+        log.info("fileName:" + fileInfo.getName());
+        log.info("UniqueIdentifier:" + fileInfo.getUniqueIdentifier());
         return ResponseEntity.ok("SUCCESS");
     }
 }

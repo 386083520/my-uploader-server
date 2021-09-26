@@ -1,14 +1,12 @@
 package com.gsd.myuploaderserver.controller;
 
+import com.gsd.myuploaderserver.models.FileInfo;
 import com.gsd.myuploaderserver.models.MultipartFileParams;
 import com.gsd.myuploaderserver.service.FileUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -21,5 +19,10 @@ public class UploadController {
     public ResponseEntity<String> upload(MultipartFileParams file) {
         log.info("file");
         return fileUploadService.uploadFile(file);
+    }
+
+    @PostMapping(value = "/mergeFile")
+    public ResponseEntity<String> mergeFile(@RequestBody FileInfo file) {
+        return fileUploadService.mergeFile(file);
     }
 }
