@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -61,17 +63,21 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Override
     public ResponseEntity<Object> uploadCheck(MultipartFileParams fileParams) {
         String identifier = fileParams.getIdentifier();
-        int chunkNumber = fileParams.getChunkNumber();
-        File fileTemp = new File(uploadFilePath + "/" + identifier + "/temp/" + chunkNumber);
-        if(fileTemp.exists()) {
-            int[] temp = {1,2,3,4,5};
-            Map<String, Object> map = new HashMap<>();
-            map.put("uploaded", temp);
-            map.put("needSkiped", true);
-            return ResponseEntity.ok(ResponseData.success(map));
-        }else {
-            return ResponseEntity.ok(ResponseData.fail());
+        File fileExistTemp = new File(uploadFilePath + "/" + identifier + "/" + fileParams.getFilename());
+        File fileExistDir = new File(uploadFilePath + "/" + identifier + "/temp");
+        List<String> fileList = new ArrayList<>();
+        Boolean isExist = fileExistTemp.exists();
+        log.info("fileExistDir.listFiles()", fileExistDir.listFiles());
+        if(!isExist && fileExistDir.listFiles()!= null) {
+            File[] listFiles = fileExistDir.listFiles();
+            for (int i = 0; i < listFiles.length; i++) {
+                fileList.add(listFiles[i].getName());
+            }
         }
+        Map<String, Object> map = new HashMap<>();
+        map.put("uploaded", fileList.toArray());
+        map.put("needSkiped", isExist);
+        return ResponseEntity.ok(ResponseData.success(map));
 
     }
 }
