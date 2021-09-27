@@ -8,4 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileUploadService {
     ResponseEntity<String> uploadFile(MultipartFileParams file);
     ResponseEntity<String> mergeFile(FileInfo fileInfo);
+    ResponseEntity<Object> uploadCheck(MultipartFileParams file);
 }

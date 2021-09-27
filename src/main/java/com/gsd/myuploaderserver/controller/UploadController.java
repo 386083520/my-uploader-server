@@ -21,6 +21,12 @@ public class UploadController {
         return fileUploadService.uploadFile(file);
     }
 
+    @GetMapping(value = "/uploadFile")
+    public ResponseEntity<Object> uploadCheck(MultipartFileParams file) {
+        log.info("file");
+        return fileUploadService.uploadCheck(file);
+    }
+
     @PostMapping(value = "/mergeFile")
     public ResponseEntity<String> mergeFile(@RequestBody FileInfo file) {
         return fileUploadService.mergeFile(file);

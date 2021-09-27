@@ -2,6 +2,7 @@ package com.gsd.myuploaderserver.service.impl;
 
 import com.gsd.myuploaderserver.models.FileInfo;
 import com.gsd.myuploaderserver.models.MultipartFileParams;
+import com.gsd.myuploaderserver.models.ResponseData;
 import com.gsd.myuploaderserver.service.FileUploadService;
 import com.gsd.myuploaderserver.utils.CacheUtils;
 import com.gsd.myuploaderserver.utils.MergeFileUtil;
@@ -14,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
@@ -52,5 +56,22 @@ public class FileUploadServiceImpl implements FileUploadService {
         int chunks = Integer.parseInt(CacheUtils.getMap().get("chunks_"+ identifier));
         String result = mergeFileUtil.mergeFile(uploadFilePath + "/" + identifier, fileInfo.getName(), chunks);
         return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public ResponseEntity<Object> uploadCheck(MultipartFileParams fileParams) {
+        String identifier = fileParams.getIdentifier();
+        int chunkNumber = fileParams.getChunkNumber();
+        File fileTemp = new File(uploadFilePath + "/" + identifier + "/temp/" + chunkNumber);
+        if(fileTemp.exists()) {
+            int[] temp = {1,2,3,4,5};
+            Map<String, Object> map = new HashMap<>();
+            map.put("uploaded", temp);
+            map.put("needSkiped", true);
+            return ResponseEntity.ok(ResponseData.success(map));
+        }else {
+            return ResponseEntity.ok(ResponseData.fail());
+        }
+
     }
 }
